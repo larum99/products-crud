@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 
 // environment variables
@@ -15,8 +16,18 @@ app.use(express.json());
 // routes
 
 // test route
-app.get("/", (req, res) => {
-    res.send("Management products API working properly")
-})
+
+
+  // connect to DB
+(async () => {
+    try {
+      await connectDB();
+      console.log("DB connection established correctly");
+    } catch (error) {
+      console.error("Error to connect to DB:", error.message);
+      process.exit(1);
+    }
+  }
+)();
 
 module.exports = app;
