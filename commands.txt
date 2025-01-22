@@ -1,0 +1,8 @@
+backend
+
+npm init -y
+npm install express mongoose dotenv jsonwebtoken bcryptjs cors
+
+
+frontend
+
