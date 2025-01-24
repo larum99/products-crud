@@ -44,6 +44,27 @@ const loginUser = async (req, res) => {
         }
 
         // create token
-        const token = jwt.sign({ id: user._id, role: user.role }, )
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+            expiresIn: "10s",
+        });
+
+        res.status(200).json({ message: "Login Successfully", token });
+    } catch (error) {
+        res.status(500).json({ message: "Login failed", error: error.message });
     }
-}
+};
+
+// get profile
+const getProfile = async (req, rs) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "User not found"});
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: "Error getting profile", error: error.message });
+    }
+};
+
+module.exports = { registerUser, loginUser, getProfile };
