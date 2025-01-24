@@ -16,9 +16,11 @@ app.use(express.json());
 // routes
 
 // test route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Products Management API" });
+});
 
-
-  // connect to DB
+// connect to DB
 (async () => {
     try {
       await connectDB();
