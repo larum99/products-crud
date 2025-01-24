@@ -45,7 +45,7 @@ const loginUser = async (req, res) => {
 
         // create token
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-            expiresIn: "10s",
+            expiresIn: "30s",
         });
 
         res.status(200).json({ message: "Login Successfully", token });
@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
 };
 
 // get profile
-const getProfile = async (req, rs) => {
+const getProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select("-password");
         if (!user) {
