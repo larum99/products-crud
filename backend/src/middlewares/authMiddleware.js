@@ -16,4 +16,11 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
-module.exports = { authMiddleware };
+const verifyRole = (roles) => (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+        return res.status(403).json({ message: "No tienes permiso para acceder a esta ruta" });
+    }
+    next();
+};
+
+module.exports = { authMiddleware, verifyRole };
