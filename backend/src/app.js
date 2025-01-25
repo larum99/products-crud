@@ -19,16 +19,16 @@ app.use("/api/users", userRoutes);
 
 // test route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Products Management API" });
+  res.json({ message: "Bienvenido a la API de gestión de productos" });
 });
 
 // connect to DB
 (async () => {
     try {
       await connectDB();
-      console.log("DB connection established correctly");
+      console.log("Conexión correctamente establecida a la base de datos");
     } catch (error) {
-      console.error("Error to connect to DB:", error.message);
+      console.error("Error para conectar a la base de datos:", error.message);
       process.exit(1);
     }
   }

@@ -9,7 +9,7 @@ const registerUser = async (req, res) => {
         // check if user already exists
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: "The user is already registered."})
+            return res.status(400).json({ message: "El usuario ya está registrado"})
         }
 
         const newUser = new User({
@@ -21,9 +21,9 @@ const registerUser = async (req, res) => {
 
         await newUser.save();
 
-        res.status(201).json({ message: "User registered succesfully"});
+        res.status(201).json({ message: "Usuario registrado exitosamente"});
     } catch (error) {
-        res.status(500).json({ message: "Error to register user", error: error.message});
+        res.status(500).json({ message: "Error para registrar usuario", error: error.message});
     }
 };
 
@@ -34,13 +34,13 @@ const loginUser = async (req, res) => {
 
         const user = await User.findOne({ email});
         if (!user) {
-            return res.status(400).json({ message: "User not found"});
+            return res.status(400).json({ message: "Usuario no encontrado"});
         }
 
         // Compare passwords
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(400).json({ message: "Incorrect Password"});
+            return res.status(400).json({ message: "Contraseña incorrecta"});
         }
 
         // create token
@@ -48,9 +48,9 @@ const loginUser = async (req, res) => {
             expiresIn: "30s",
         });
 
-        res.status(200).json({ message: "Login Successfully", token });
+        res.status(200).json({ message: "Inicio de sesión exitoso", token });
     } catch (error) {
-        res.status(500).json({ message: "Login failed", error: error.message });
+        res.status(500).json({ message: "Inicio de sesión fallido", error: error.message });
     }
 };
 
@@ -59,11 +59,11 @@ const getProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select("-password");
         if (!user) {
-            return res.status(404).json({ message: "User not found"});
+            return res.status(404).json({ message: "Usuario no encontrado"});
         }
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: "Error getting profile", error: error.message });
+        res.status(500).json({ message: "Error obteniendo perfil", error: error.message });
     }
 };
 
