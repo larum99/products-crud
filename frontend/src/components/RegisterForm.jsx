@@ -56,7 +56,7 @@ export default function RegisterForm() {
 
         if (Object.keys(formErrors).length === 0) {
             try {
-                const response = await axios.post("/api/users/register", {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, {
                     name: formData.name,
                     email: formData.email,
                     password: formData.password,
