@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
@@ -26,12 +26,22 @@ export default function RegisterForm() {
         if (!formData[name]) {
             setErrors((prev) => ({
                 ...prev,
-                [name]: `${name.charAt(0).toUpperCase() + name.slice(1)} es obligatorio`,
+                [name]: `${name === 'name' ? 'El nombre' :
+                    name === 'email' ? 'El correo' :
+                        name === 'password' ? 'La contraseña' :
+                            'La confirmación de contraseña'} es obligatorio`,
             }));
         } else {
             setErrors((prev) => ({
                 ...prev,
                 [name]: null,
+            }));
+        }
+
+        if (name === 'confirmPassword' && formData.password !== formData.confirmPassword) {
+            setErrors((prev) => ({
+                ...prev,
+                confirmPassword: "Las contraseñas no coinciden"
             }));
         }
     };
@@ -66,16 +76,16 @@ export default function RegisterForm() {
                     // Redirigir o mostrar mensaje de éxito
                 }
             } catch (err) {
-                console.error(err);
-                // Manejar errores del servidor
+                setErrors({ general: "Ocurrió un error. Por favor, intenta nuevamente." });
             }
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-secondary-dark">Nombre</label>
+        <form onSubmit={handleSubmit} className="login-form">
+            {errors.general && <p className="text-danger mb-3">{errors.general}</p>}
+            <div className="mb-3">
+                <label htmlFor="name" className="form-label">Nombre</label>
                 <input
                     type="text"
                     id="name"
@@ -83,14 +93,14 @@ export default function RegisterForm() {
                     value={formData.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary"
+                    className="form-control"
                     required
                 />
-                {errors.name && <span className="text-red-500">{errors.name}</span>}
+                {errors.name && <p className="text-danger">{errors.name}</p>}
             </div>
 
-            <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-secondary-dark">Correo electrónico</label>
+            <div className="mb-3">
+                <label htmlFor="email" className="form-label">Correo electrónico</label>
                 <input
                     type="email"
                     id="email"
@@ -98,14 +108,14 @@ export default function RegisterForm() {
                     value={formData.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary"
+                    className="form-control"
                     required
                 />
-                {errors.email && <span className="text-red-500">{errors.email}</span>}
+                {errors.email && <p className="text-danger">{errors.email}</p>}
             </div>
 
             <div className="mb-4">
-                <label htmlFor="password" className="block text-sm font-medium text-secondary-dark">Contraseña</label>
+                <label htmlFor="password" className="form-label">Contraseña</label>
                 <input
                     type="password"
                     id="password"
@@ -113,14 +123,14 @@ export default function RegisterForm() {
                     value={formData.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary"
+                    className="form-control"
                     required
                 />
-                {errors.password && <span className="text-red-500">{errors.password}</span>}
+                {errors.password && <p className="text-danger">{errors.password}</p>}
             </div>
 
             <div className="mb-4">
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-secondary-dark">Confirmar contraseña</label>
+                <label htmlFor="confirmPassword" className="form-label">Confirmar contraseña</label>
                 <input
                     type="password"
                     id="confirmPassword"
@@ -128,19 +138,22 @@ export default function RegisterForm() {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary"
+                    className="form-control"
                     required
                 />
-                {errors.confirmPassword && <span className="text-red-500">{errors.confirmPassword}</span>}
+                {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword}</p>}
             </div>
 
-            <button type="submit" className="w-full py-2 px-4 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+            <button type="submit" className="btn btn-primary w-100">
                 Registrarme
             </button>
 
-            <div className="mt-4 text-center">
-                <span className="text-secondary-dark">¿Ya tienes cuenta?</span> <Link href="/login" className="text-primary">Iniciar sesión</Link>
-            </div>
+            <p className="text-center text-muted mt-3">
+                ¿Ya tienes una cuenta?{" "}
+                <Link href="/login" className="text-decoration-none text-primary">
+                    Inicia sesión aquí
+                </Link>
+            </p>
         </form>
     );
 }
