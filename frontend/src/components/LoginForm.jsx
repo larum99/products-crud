@@ -11,7 +11,7 @@ export default function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({});  // Guardamos los errores de forma simple
     const router = useRouter();
 
     const handleChange = (e) => {
@@ -22,6 +22,7 @@ export default function LoginForm() {
 
     const handleBlur = (e) => {
         const { name } = e.target;
+        // Validamos que los campos no estén vacíos solo al hacer blur
         if (!email && name === "email") {
             setErrors((prev) => ({
                 ...prev,
@@ -51,7 +52,8 @@ export default function LoginForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        
+        // Validamos solo antes de hacer la solicitud
         const formErrors = validateForm();
         setErrors(formErrors);
 
@@ -66,8 +68,9 @@ export default function LoginForm() {
                 );
 
                 localStorage.setItem("token", response.data.token);
-                login(response.data.token);
+                login(response.data.token); // Actualiza el estado global pasando el token
 
+                // Redirigir según el rol del usuario
                 if (response.data.user.role === "admin") {
                     router.push("/admin/dashboard");
                 } else {

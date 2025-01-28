@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Importar useRouter
 
 export default function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function RegisterForm() {
     });
 
     const [errors, setErrors] = useState({});
+    const router = useRouter(); // Inicializar useRouter
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,6 +25,8 @@ export default function RegisterForm() {
 
     const handleBlur = (e) => {
         const { name } = e.target;
+        
+        // Validación de campos obligatorios
         if (!formData[name]) {
             setErrors((prev) => ({
                 ...prev,
@@ -38,6 +42,7 @@ export default function RegisterForm() {
             }));
         }
 
+        // Validación de confirmación de contraseña
         if (name === 'confirmPassword' && formData.password !== formData.confirmPassword) {
             setErrors((prev) => ({
                 ...prev,
@@ -73,7 +78,10 @@ export default function RegisterForm() {
                 });
 
                 if (response.data.success) {
-                    // Redirigir o mostrar mensaje de éxito
+                    // Usar router.replace en lugar de router.push
+                    router.replace("/login"); // Redirige al login
+                } else {
+                    setErrors({ general: "Ocurrió un error. Por favor, intenta nuevamente." });
                 }
             } catch (err) {
                 setErrors({ general: "Ocurrió un error. Por favor, intenta nuevamente." });
