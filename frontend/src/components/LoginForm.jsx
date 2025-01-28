@@ -25,16 +25,14 @@ export default function LoginForm() {
                 }
             );
 
-            // Guarda el token y actualiza el estado global
+            // Guarda el token y redirige según el rol
             localStorage.setItem("token", response.data.token);
-            login(response.data.token); // Actualiza el estado global pasando el token
-            console.log("Token guardado:", response.data.token);
+            login(response.data.token);
 
-            // Redirigir según el rol del usuario
             if (response.data.user.role === "admin") {
-                router.push("/admin/dashboard");  // Página para administrar productos
+                router.push("/admin/dashboard");
             } else {
-                router.push("/");  // Página de usuario regular
+                router.push("/");
             }
         } catch (error) {
             setError(error.response?.data?.message || "Ocurrió un error. Por favor, intenta nuevamente.");
@@ -42,49 +40,34 @@ export default function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-6 border border-primary rounded-md shadow-md bg-primary">
-            <h2 className="text-2xl font-bold mb-6 text-center">Iniciar sesión</h2>
-            {error && <p className="text-red-500">{error}</p>}
-            <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-secondary-dark">
-                    Correo electrónico
-                </label>
+        <form onSubmit={handleSubmit} className="login-form">
+            {error && <p className="text-danger mb-3">{error}</p>}
+            <div className="mb-3">
+                <label htmlFor="email" className="form-label">Correo electrónico</label>
                 <input
                     type="email"
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary"
+                    className="form-control"
                     required
                 />
             </div>
-            <div className="mb-6">
-                <label htmlFor="password" className="block text-sm font-medium text-secondary-dark">
-                    Contraseña
-                </label>
+            <div className="mb-4">
+                <label htmlFor="password" className="form-label">Contraseña</label>
                 <input
                     type="password"
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary"
+                    className="form-control"
                     required
                 />
             </div>
-            <button
-                type="submit"
-                className="w-full py-2 px-4 bg-secondary-dark hover:bg-secondary text-white  font-bold rounded-md hover:bg-primary-dark transition duration-200"
-            >
-                Iniciar sesión
-            </button>
-
-            {/* Enlace al formulario de registro */}
-            <p className="text-center text-sm mt-4 text-secondary-dark">
+            <button type="submit" className="btn btn-primary w-100">Iniciar sesión</button>
+            <p className="text-center text-muted mt-3">
                 ¿No tienes una cuenta?{" "}
-                <Link
-                    href="/register"
-                    className="text-secondary hover:underline"
-                >
+                <Link href="/register" className="text-decoration-none text-primary">
                     Regístrate aquí
                 </Link>
             </p>
