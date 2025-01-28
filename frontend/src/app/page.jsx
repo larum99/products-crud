@@ -9,9 +9,9 @@ export default function Home() {
     import("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
 
-  // Función para manejar la redirección
+  // Function to handle redirection
   const handleLoginClick = () => {
-    router.push("/login"); // Redirige a la página de login
+    router.push("/login");
   };
 
   return (
