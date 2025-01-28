@@ -25,7 +25,6 @@ export default function LoginForm() {
                 }
             );
 
-            // Guarda el token y redirige según el rol
             localStorage.setItem("token", response.data.token);
             login(response.data.token);
 
