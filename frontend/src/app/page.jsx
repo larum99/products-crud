@@ -15,9 +15,9 @@ export default function Home() {
   };
 
   return (
-    <div className="container text-center">
-      <h1 className="mt-5 text-primary">¡Bienvenido a tu App de Gestión de Productos!</h1>
-      <button className="btn btn-success" onClick={handleLoginClick}>
+    <div className="container-fluid home-container d-flex flex-column justify-content-center align-items-center text-center">
+      <h1 className="home-title text-primary">¡Bienvenido a tu App de Gestión de Productos!</h1>
+      <button className="btn btn-secondary mt-3 home-button" onClick={handleLoginClick}>
         Inicia Sesión
       </button>
     </div>
