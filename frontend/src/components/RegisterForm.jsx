@@ -1,8 +1,8 @@
 'use client';
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Importar useRouter
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ export default function RegisterForm() {
     });
 
     const [errors, setErrors] = useState({});
-    const router = useRouter(); // Inicializar useRouter
+    const router = useRouter();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,7 +26,6 @@ export default function RegisterForm() {
     const handleBlur = (e) => {
         const { name } = e.target;
         
-        // Validación de campos obligatorios
         if (!formData[name]) {
             setErrors((prev) => ({
                 ...prev,
@@ -42,7 +41,6 @@ export default function RegisterForm() {
             }));
         }
 
-        // Validación de confirmación de contraseña
         if (name === 'confirmPassword' && formData.password !== formData.confirmPassword) {
             setErrors((prev) => ({
                 ...prev,
@@ -77,13 +75,13 @@ export default function RegisterForm() {
                     password: formData.password,
                 });
 
-                if (response.data.success) {
-                    // Usar router.replace en lugar de router.push
-                    router.replace("/login"); // Redirige al login
+                if (response.status === 201 && response.data.message === "Usuario registrado exitosamente") {
+                    router.replace("/login");
                 } else {
-                    setErrors({ general: "Ocurrió un error. Por favor, intenta nuevamente." });
+                    setErrors({ general: response.data.message || "Ocurrió un error. Por favor, intenta nuevamente." });
                 }
             } catch (err) {
+                console.error(err);
                 setErrors({ general: "Ocurrió un error. Por favor, intenta nuevamente." });
             }
         }
