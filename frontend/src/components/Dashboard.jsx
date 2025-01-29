@@ -61,9 +61,16 @@ export default function Dashboard() {
         setProductData({ ...productData, [e.target.name]: e.target.value });
     };
 
+    // Función para mostrar el mensaje y desaparecer después de 3 segundos
+    const showMessage = (msg) => {
+        setMessage(msg);
+        setTimeout(() => {
+            setMessage("");
+        }, 3000); // El mensaje desaparece después de 3 segundos
+    };
+
     // ABRIR MODAL PARA AGREGAR O EDITAR
     const openModal = (product = null) => {
-        // Limpiar mensaje anterior
         setMessage("");
 
         if (product) {
@@ -83,7 +90,7 @@ export default function Dashboard() {
         setMessage("");
 
         if (!token) {
-            setMessage("❌ No tienes permisos.");
+            showMessage("❌ No tienes permisos.");
             return;
         }
 
@@ -92,18 +99,18 @@ export default function Dashboard() {
                 await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/products/${currentProduct._id}`, productData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setMessage("✅ Producto actualizado.");
+                showMessage("✅ Producto actualizado.");
             } else {
                 await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/products`, productData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setMessage("✅ Producto agregado.");
+                showMessage("✅ Producto agregado.");
             }
 
             setShowModal(false);
             fetchProducts();
         } catch (err) {
-            setMessage("❌ Error al procesar la solicitud.");
+            showMessage("❌ Error al procesar la solicitud.");
         }
     };
 
@@ -116,7 +123,7 @@ export default function Dashboard() {
     // ELIMINAR PRODUCTO
     const handleDelete = async () => {
         if (!token) {
-            setMessage("❌ No tienes permisos.");
+            showMessage("❌ No tienes permisos.");
             return;
         }
 
@@ -124,11 +131,11 @@ export default function Dashboard() {
             await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/products/${currentProduct._id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setMessage("✅ Producto eliminado.");
+            showMessage("✅ Producto eliminado.");
             setShowDeleteModal(false);
             fetchProducts();
         } catch (err) {
-            setMessage("❌ Error al eliminar el producto.");
+            showMessage("❌ Error al eliminar el producto.");
         }
     };
 
@@ -138,6 +145,9 @@ export default function Dashboard() {
     return (
         <div className="container py-4">
             <h2 className="text-center text-primary mb-4">Gestión de Productos</h2>
+
+            {/* Mostrar mensajes globalmente */}
+            {message && <p className="text-center text-danger mt-3">{message}</p>}
 
             <div className="d-flex justify-content-between align-items-center mb-3">
                 {role === "user" && (
@@ -227,8 +237,6 @@ export default function Dashboard() {
                                         <button type="submit" className="btn btn-primary">{isEditing ? "Actualizar" : "Guardar"}</button>
                                     </div>
                                 </form>
-
-                                {message && <p className="mt-3 text-center">{message}</p>}
                             </div>
                         </div>
                     </div>
