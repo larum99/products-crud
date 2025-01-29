@@ -23,8 +23,7 @@ export default function Navbar() {
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container">
                 <a className="navbar-brand" href="/dashboard">
-                    <img src="/logo.png" alt="Logo" width="40" height="40" className="d-inline-block align-top me-2" />
-                    Mi App
+                    Gestión de Productos
                 </a>
                 {isAuthenticated && (
                     <button className="btn btn-danger" onClick={handleLogout}>
