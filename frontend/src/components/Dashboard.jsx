@@ -11,7 +11,7 @@ export default function Dashboard() {
     const [search, setSearch] = useState("");
     const [message, setMessage] = useState("");
 
-    // Estados para agregar y editar productos
+    // Estados para agregar, editar y eliminar productos
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
@@ -22,6 +22,9 @@ export default function Dashboard() {
         category: "",
         stock: ""
     });
+
+    // Estado para mostrar el modal de eliminación
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -60,6 +63,9 @@ export default function Dashboard() {
 
     // ABRIR MODAL PARA AGREGAR O EDITAR
     const openModal = (product = null) => {
+        // Limpiar mensaje anterior
+        setMessage("");
+
         if (product) {
             setIsEditing(true);
             setCurrentProduct(product);
@@ -101,15 +107,25 @@ export default function Dashboard() {
         }
     };
 
+    // ABRIR MODAL DE ELIMINACION DE PRODUCTO
+    const openDeleteModal = (product) => {
+        setCurrentProduct(product);
+        setShowDeleteModal(true);
+    };
+
     // ELIMINAR PRODUCTO
-    const handleDelete = async (id) => {
-        if (!window.confirm("¿Estás seguro de eliminar este producto?")) return;
+    const handleDelete = async () => {
+        if (!token) {
+            setMessage("❌ No tienes permisos.");
+            return;
+        }
 
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/products/${currentProduct._id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage("✅ Producto eliminado.");
+            setShowDeleteModal(false);
             fetchProducts();
         } catch (err) {
             setMessage("❌ Error al eliminar el producto.");
@@ -165,7 +181,7 @@ export default function Dashboard() {
                                     {role === "admin" ? (
                                         <div className="d-flex gap-2">
                                             <button className="btn btn-warning btn-sm w-100" onClick={() => openModal(product)}>Editar</button>
-                                            <button className="btn btn-danger btn-sm w-100" onClick={() => handleDelete(product._id)}>Eliminar</button>
+                                            <button className="btn btn-danger btn-sm w-100" onClick={() => openDeleteModal(product)}>Eliminar</button>
                                         </div>
                                     ) : (
                                         <span className="text-muted">Habilitado solo para admin</span>
@@ -213,6 +229,27 @@ export default function Dashboard() {
                                 </form>
 
                                 {message && <p className="mt-3 text-center">{message}</p>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL PARA CONFIRMAR ELIMINACION */}
+            {showDeleteModal && currentProduct && (
+                <div className="modal fade show d-block" tabIndex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Eliminar Producto</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowDeleteModal(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <p>¿Estás seguro de que deseas eliminar el producto <strong>{currentProduct.name}</strong>?</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>
+                                <button type="button" className="btn btn-danger" onClick={handleDelete}>Eliminar</button>
                             </div>
                         </div>
                     </div>
