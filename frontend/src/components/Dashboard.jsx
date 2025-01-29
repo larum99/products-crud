@@ -150,16 +150,16 @@ export default function Dashboard() {
             {message && <p className="text-center text-danger mt-3">{message}</p>}
 
             <div className="d-flex justify-content-between align-items-center mb-3">
-                {role === "user" && (
-                    <input
-                        type="text"
-                        className="form-control w-50"
-                        placeholder="Buscar producto..."
-                        value={search}
-                        onChange={handleSearch}
-                    />
-                )}
+                {/* Campo de búsqueda visible para todos los roles */}
+                <input
+                    type="text"
+                    className="form-control w-50"
+                    placeholder="Buscar producto..."
+                    value={search}
+                    onChange={handleSearch}
+                />
 
+                {/* Solo el admin puede agregar productos */}
                 {role === "admin" && (
                     <button className="btn btn-outline-success" onClick={() => openModal()}>
                         Agregar Producto
