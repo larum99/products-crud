@@ -65,7 +65,7 @@ export default function LoginForm() {
     
                 const { token, user } = response.data;
                 localStorage.setItem("token", token);
-                localStorage.setItem("role", user.role); // 🔥 Guarda el rol del usuario
+                localStorage.setItem("role", user.role); // Guarda el rol del usuario
     
                 login(token);
     
