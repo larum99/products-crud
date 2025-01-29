@@ -9,19 +9,22 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState("");
+    const [message, setMessage] = useState("");
 
-    // Estado del modal y formulario
+    // Estados para agregar y editar productos
     const [showModal, setShowModal] = useState(false);
-    const [newProduct, setNewProduct] = useState({
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentProduct, setCurrentProduct] = useState(null);
+    const [productData, setProductData] = useState({
         name: "",
         description: "",
         price: "",
         category: "",
         stock: ""
     });
-    const [message, setMessage] = useState("");
 
     const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     useEffect(() => {
         fetchProducts();
@@ -52,38 +55,66 @@ export default function Dashboard() {
     };
 
     const handleInputChange = (e) => {
-        setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+        setProductData({ ...productData, [e.target.name]: e.target.value });
     };
 
+    // ABRIR MODAL PARA AGREGAR O EDITAR
+    const openModal = (product = null) => {
+        if (product) {
+            setIsEditing(true);
+            setCurrentProduct(product);
+            setProductData(product);
+        } else {
+            setIsEditing(false);
+            setProductData({ name: "", description: "", price: "", category: "", stock: "" });
+        }
+        setShowModal(true);
+    };
+
+    // AGREGAR O EDITAR PRODUCTO
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
 
-        const token = localStorage.getItem("token"); // Obtener token almacenado
-
         if (!token) {
-            setMessage("❌ No tienes permisos para agregar productos.");
+            setMessage("❌ No tienes permisos.");
             return;
         }
 
         try {
-            await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/products`,
-                newProduct,
-                {
-                    headers: { Authorization: `Bearer ${token}` } // Agregar token en la petición
-                }
-            );
+            if (isEditing) {
+                await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/products/${currentProduct._id}`, productData, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setMessage("✅ Producto actualizado.");
+            } else {
+                await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/products`, productData, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setMessage("✅ Producto agregado.");
+            }
 
-            setMessage("✅ Producto agregado con éxito.");
-            setNewProduct({ name: "", description: "", price: "", category: "", stock: "" });
             setShowModal(false);
-            fetchProducts(); // Recargar lista
+            fetchProducts();
         } catch (err) {
-            setMessage("❌ Error al agregar el producto.");
+            setMessage("❌ Error al procesar la solicitud.");
         }
     };
 
+    // ELIMINAR PRODUCTO
+    const handleDelete = async (id) => {
+        if (!window.confirm("¿Estás seguro de eliminar este producto?")) return;
+
+        try {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setMessage("✅ Producto eliminado.");
+            fetchProducts();
+        } catch (err) {
+            setMessage("❌ Error al eliminar el producto.");
+        }
+    };
 
     if (loading) return <p>Cargando productos...</p>;
     if (error) return <p className="text-danger">{error}</p>;
@@ -104,8 +135,8 @@ export default function Dashboard() {
                 )}
 
                 {role === "admin" && (
-                    <button className="btn btn-success" onClick={() => setShowModal(true)}>
-                        Agregar Producto
+                    <button className="btn btn-success" onClick={() => openModal()}>
+                        ➕ Agregar Producto
                     </button>
                 )}
             </div>
@@ -133,14 +164,13 @@ export default function Dashboard() {
                                 <td>
                                     {role === "admin" ? (
                                         <div className="d-flex gap-2">
-                                            <button className="btn btn-warning btn-sm w-100">Editar</button>
-                                            <button className="btn btn-danger btn-sm w-100">Eliminar</button>
+                                            <button className="btn btn-warning btn-sm w-100" onClick={() => openModal(product)}>Editar</button>
+                                            <button className="btn btn-danger btn-sm w-100" onClick={() => handleDelete(product._id)}>Eliminar</button>
                                         </div>
                                     ) : (
                                         <span className="text-muted">Habilitado solo para admin</span>
                                     )}
                                 </td>
-
                             </tr>
                         ))
                     ) : (
@@ -151,84 +181,34 @@ export default function Dashboard() {
                 </tbody>
             </table>
 
-            {/* MODAL PARA AGREGAR PRODUCTO */}
+            {/* MODAL PARA AGREGAR / EDITAR PRODUCTO */}
             {showModal && (
                 <div className="modal fade show d-block" tabIndex="-1">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Agregar Producto</h5>
+                                <h5 className="modal-title">{isEditing ? "Editar Producto" : "Agregar Producto"}</h5>
                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body">
                                 <form onSubmit={handleSubmit}>
-                                    <div className="mb-3">
-                                        <label className="form-label">Nombre</label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            className="form-control"
-                                            value={newProduct.name}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Descripción</label>
-                                        <input
-                                            type="text"
-                                            name="description"
-                                            className="form-control"
-                                            value={newProduct.description}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Precio</label>
-                                        <input
-                                            type="number"
-                                            name="price"
-                                            className="form-control"
-                                            value={newProduct.price}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Categoría</label>
-                                        <input
-                                            type="text"
-                                            name="category"
-                                            className="form-control"
-                                            value={newProduct.category}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Inventario</label>
-                                        <input
-                                            type="number"
-                                            name="stock"
-                                            className="form-control"
-                                            value={newProduct.stock}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
+                                    {["name", "description", "price", "category", "stock"].map((field) => (
+                                        <div className="mb-3" key={field}>
+                                            <label className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                                            <input
+                                                type={field === "price" || field === "stock" ? "number" : "text"}
+                                                name={field}
+                                                className="form-control"
+                                                value={productData[field]}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                    ))}
 
                                     <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                            Cancelar
-                                        </button>
-                                        <button type="submit" className="btn btn-primary">
-                                            Guardar Producto
-                                        </button>
+                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancelar</button>
+                                        <button type="submit" className="btn btn-primary">{isEditing ? "Actualizar" : "Guardar"}</button>
                                     </div>
                                 </form>
 
