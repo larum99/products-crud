@@ -151,8 +151,8 @@ export default function Dashboard() {
                 )}
 
                 {role === "admin" && (
-                    <button className="btn btn-success" onClick={() => openModal()}>
-                        ➕ Agregar Producto
+                    <button className="btn btn-outline-success" onClick={() => openModal()}>
+                        Agregar Producto
                     </button>
                 )}
             </div>
@@ -180,8 +180,8 @@ export default function Dashboard() {
                                 <td>
                                     {role === "admin" ? (
                                         <div className="d-flex gap-2">
-                                            <button className="btn btn-warning btn-sm w-100" onClick={() => openModal(product)}>Editar</button>
-                                            <button className="btn btn-danger btn-sm w-100" onClick={() => openDeleteModal(product)}>Eliminar</button>
+                                            <button className="btn btn-outline-primary btn-sm w-100" onClick={() => openModal(product)}>Editar</button>
+                                            <button className="btn btn-outline-danger btn-sm w-100" onClick={() => openDeleteModal(product)}>Eliminar</button>
                                         </div>
                                     ) : (
                                         <span className="text-muted">Habilitado solo para admin</span>

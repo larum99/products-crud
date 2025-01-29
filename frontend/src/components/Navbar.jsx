@@ -20,13 +20,13 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
-                <a className="navbar-brand" href="/dashboard">
+                <a className="navbar-brand text-primary" href="/dashboard">
                     Gestión de Productos
                 </a>
                 {isAuthenticated && (
-                    <button className="btn btn-danger" onClick={handleLogout}>
+                    <button className="btn btn-outline-dark" onClick={handleLogout}>
                         Cerrar Sesión
                     </button>
                 )}
