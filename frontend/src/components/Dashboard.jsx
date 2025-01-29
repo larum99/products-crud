@@ -167,7 +167,7 @@ export default function Dashboard() {
                 )}
             </div>
 
-            <table className="table table-striped table-bordered">
+            <table className="table table-striped table-bordered text-center">
                 <thead className="thead-dark">
                     <tr>
                         <th>Nombre</th>
