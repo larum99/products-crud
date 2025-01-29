@@ -48,16 +48,23 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Contraseña incorrecta" });
         }
 
-        // Create token with user id and role
+        // Create token
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-            expiresIn: "10h", // Change token expiry to 10 hours
+            expiresIn: "10h",
         });
 
-        res.status(200).json({ message: "Inicio de sesión exitoso", token });
+        // 🔥 Agregar la información del usuario en la respuesta
+        res.status(200).json({ 
+            message: "Inicio de sesión exitoso", 
+            token,
+            user: { id: user._id, role: user.role }  // <--- Aquí agregamos el usuario
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Inicio de sesión fallido", error: error.message });
     }
 };
+
 
 // get profile
 const getProfile = async (req, res) => {
