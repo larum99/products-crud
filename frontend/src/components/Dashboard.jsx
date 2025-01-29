@@ -15,8 +15,9 @@ export default function Dashboard() {
         stock: "",
     });
     const [editProductId, setEditProductId] = useState(null);
+    
+    const role = typeof window !== "undefined" ? localStorage.getItem("role") : null; // 🔥 Obtener rol
 
-    // Fetch products from the backend
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -97,67 +98,35 @@ export default function Dashboard() {
     return (
         <div className="table-responsive">
             <h2>Administrar Productos</h2>
-            {/* Formulario para agregar o editar productos */}
-            <form onSubmit={editProductId ? handleEditProduct : handleAddProduct} className="mb-4">
-                <div className="form-group">
-                    <label>Nombre del producto</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Descripción</label>
-                    <input
-                        type="text"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Precio</label>
-                    <input
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Categoría</label>
-                    <input
-                        type="text"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Inventario</label>
-                    <input
-                        type="number"
-                        name="stock"
-                        value={formData.stock}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary mt-2">
-                    {editProductId ? "Editar Producto" : "Agregar Producto"}
-                </button>
-            </form>
+
+            {/* 🔥 Mostrar formulario solo si es admin */}
+            {role === "admin" && (
+                <form onSubmit={editProductId ? handleEditProduct : handleAddProduct} className="mb-4">
+                    <div className="form-group">
+                        <label>Nombre del producto</label>
+                        <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="form-control" required />
+                    </div>
+                    <div className="form-group">
+                        <label>Descripción</label>
+                        <input type="text" name="description" value={formData.description} onChange={handleInputChange} className="form-control" required />
+                    </div>
+                    <div className="form-group">
+                        <label>Precio</label>
+                        <input type="number" name="price" value={formData.price} onChange={handleInputChange} className="form-control" required />
+                    </div>
+                    <div className="form-group">
+                        <label>Categoría</label>
+                        <input type="text" name="category" value={formData.category} onChange={handleInputChange} className="form-control" required />
+                    </div>
+                    <div className="form-group">
+                        <label>Inventario</label>
+                        <input type="number" name="stock" value={formData.stock} onChange={handleInputChange} className="form-control" required />
+                    </div>
+                    <button type="submit" className="btn btn-primary mt-2">
+                        {editProductId ? "Editar Producto" : "Agregar Producto"}
+                    </button>
+                </form>
+            )}
 
             {/* Tabla de productos */}
             <table className="table table-striped table-bordered">
@@ -181,21 +150,26 @@ export default function Dashboard() {
                                 <td>{product.category}</td>
                                 <td>{product.stock}</td>
                                 <td>
-                                    <button
-                                        className="btn btn-warning btn-sm me-2"
-                                        onClick={() => {
-                                            setEditProductId(product._id);
-                                            setFormData(product);
-                                        }}
-                                    >
-                                        Editar
-                                    </button>
-                                    <button
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => handleDeleteProduct(product._id)}
-                                    >
-                                        Eliminar
-                                    </button>
+                                    {/* 🔥 Mostrar botones solo si es admin */}
+                                    {role === "admin" && (
+                                        <>
+                                            <button
+                                                className="btn btn-warning btn-sm me-2"
+                                                onClick={() => {
+                                                    setEditProductId(product._id);
+                                                    setFormData(product);
+                                                }}
+                                            >
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteProduct(product._id)}
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         ))

@@ -52,37 +52,30 @@ export default function LoginForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+    
         const formErrors = validateForm();
         setErrors(formErrors);
-
+    
         if (Object.keys(formErrors).length === 0) {
             try {
                 const response = await axios.post(
                     `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
-                    {
-                        email,
-                        password,
-                    }
+                    { email, password }
                 );
-
-                console.log("Respuesta del servidor:", response.data);
-
-                localStorage.setItem("token", response.data.token);
-                login(response.data.token);
-
-                // Redirigir según el rol del usuario
-                if (response.data.user.role === "admin") {
-                    router.push("/dashboard");
-                } else {
-                    router.push("/");
-                }
+    
+                const { token, user } = response.data;
+                localStorage.setItem("token", token);
+                localStorage.setItem("role", user.role); // 🔥 Guarda el rol del usuario
+    
+                login(token);
+    
+                router.push("/dashboard"); // Redirige a todos al mismo dashboard
             } catch (error) {
                 setError(error.response?.data?.message || "Ocurrió un error. Por favor, intenta nuevamente.");
             }
         }
     };
-
+    
     return (
         <form onSubmit={handleSubmit} className="login-form">
             {error && <p className="text-danger mb-3">{error}</p>}
