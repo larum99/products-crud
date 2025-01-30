@@ -14,7 +14,7 @@ const isProduction = process.env.NODE_ENV === "production";
 
 // Definir los orígenes permitidos según el entorno
 const allowedOrigins = [
-  isProduction 
+  isProduction
     ? "https://products-crud-mern-frontend.vercel.app" // Producción
     : "http://localhost:3000" // Desarrollo
 ];
@@ -52,7 +52,7 @@ app.use(express.json());
 })();
 
 // Rutas
-app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/users", require("./routes/userRoutes")); //también pueden importarse arriba y luego llamar solo la variable
 app.use("/api/products", require("./routes/productRoutes"));
 
 // Ruta de prueba
