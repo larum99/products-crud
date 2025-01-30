@@ -208,40 +208,83 @@ export default function Dashboard() {
             </table>
 
             {/* MODAL PARA AGREGAR / EDITAR PRODUCTO */}
-            {showModal && (
-                <div className="modal fade show d-block" tabIndex="-1">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">{isEditing ? "Editar Producto" : "Agregar Producto"}</h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-                            </div>
-                            <div className="modal-body">
-                                <form onSubmit={handleSubmit}>
-                                    {["name", "description", "price", "category", "stock"].map((field) => (
-                                        <div className="mb-3" key={field}>
-                                            <label className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
-                                            <input
-                                                type={field === "price" || field === "stock" ? "number" : "text"}
-                                                name={field}
-                                                className="form-control"
-                                                value={productData[field]}
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                        </div>
-                                    ))}
-
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancelar</button>
-                                        <button type="submit" className="btn btn-primary">{isEditing ? "Actualizar" : "Guardar"}</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+{showModal && (
+    <div className="modal fade show d-block" tabIndex="-1">
+        <div className="modal-dialog">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title">{isEditing ? "Editar Producto" : "Agregar Producto"}</h5>
+                    <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                 </div>
-            )}
+                <div className="modal-body">
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label className="form-label">Nombre</label>
+                            <input
+                                type="text"
+                                name="name"
+                                className="form-control"
+                                value={productData.name}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Descripción</label>
+                            <input
+                                type="text"
+                                name="description"
+                                className="form-control"
+                                value={productData.description}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Precio</label>
+                            <input
+                                type="number"
+                                name="price"
+                                className="form-control"
+                                value={productData.price}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Categoría</label>
+                            <input
+                                type="text"
+                                name="category"
+                                className="form-control"
+                                value={productData.category}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Inventario</label>
+                            <input
+                                type="number"
+                                name="stock"
+                                className="form-control"
+                                value={productData.stock}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancelar</button>
+                            <button type="submit" className="btn btn-primary">{isEditing ? "Actualizar" : "Guardar"}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+)}
+
 
             {/* MODAL PARA CONFIRMAR ELIMINACION */}
             {showDeleteModal && currentProduct && (
