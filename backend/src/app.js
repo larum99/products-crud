@@ -16,7 +16,7 @@ const isProduction = process.env.NODE_ENV === "production";
 
 // Definir los orígenes permitidos
 const allowedOrigins = isProduction
-  ? ["https://teatro-apolo-mern-frontend.vercel.app"] // Producción
+  ? ["https://products-crud-mern-frontend.vercel.app"] // Producción
   : ["http://localhost:3000"]; // Desarrollo
 
 app.use(
