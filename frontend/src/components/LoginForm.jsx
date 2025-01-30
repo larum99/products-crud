@@ -59,7 +59,7 @@ export default function LoginForm() {
         if (Object.keys(formErrors).length === 0) {
             try {
                 const response = await axios.post(
-                    `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/api/users/login`,
                     { email, password }
                 );
     
