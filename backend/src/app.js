@@ -9,10 +9,14 @@ dotenv.config();
 // Inicializar aplicación
 const app = express();
 
-// Definir los orígenes permitidos
+// Detectar entorno
+const isProduction = process.env.NODE_ENV === "production";
+
+// Definir los orígenes permitidos según el entorno
 const allowedOrigins = [
-  "https://products-crud-mern-frontend.vercel.app", // Producción
-  "http://localhost:3000", // Desarrollo
+  isProduction 
+    ? "https://products-crud-mern-frontend.vercel.app" // Producción
+    : "http://localhost:3000" // Desarrollo
 ];
 
 // Configurar CORS
