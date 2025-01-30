@@ -12,6 +12,7 @@ const app = express();
 // midddlewares
 app.use(cors({
   origin: "http://localhost:3000",
+  origin: "https://products-crud-teal.vercel.app",
 }));
 app.use(express.json());
 
