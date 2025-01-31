@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { getProducts, createProduct, updateProduct, deleteProduct } = require("..//controllers/productController");
 const { authMiddleware, verifyRole } = require("..//middlewares/authMiddleware");
-const { verify } = require("jsonwebtoken");
 
 // get products (public access)
 router.get("/", getProducts);

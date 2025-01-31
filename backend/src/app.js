@@ -3,38 +3,47 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 
-// Cargar variables de entorno
-dotenv.config();
+// Cargar variables de entorno segun el entorno
+dotenv.config({ path: `.env.${process.env.NODE_ENV || "development"}` });
 
 // Inicializar aplicación
 const app = express();
 
-// Detectar entorno
-const isProduction = process.env.NODE_ENV === "production";
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
-// Definir los orígenes permitidos según el entorno
-const allowedOrigins = [
-  isProduction
-    ? "https://products-crud-mern-frontend.vercel.app" // Producción
-    : "http://localhost:3000" // Desarrollo
-];
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("ALLOWED_ORIGINS:", allowedOrigins);
 
 // Configurar CORS
 const corsOptions = {
   origin: function (origin, callback) {
     console.log("Solicitud desde origen:", origin || "Sin origen");
+
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("No permitido por CORS"));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
+
+// Middleware global para asegurar encabezados CORS en todas las respuestas
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 app.options("*", cors(corsOptions)); // Manejar preflight requests
 
 // Middleware para parsear JSON
