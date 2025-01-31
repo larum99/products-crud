@@ -1,0 +1,59 @@
+# Gestión de Productos
+
+Este es un proyecto de gestión de productos desarrollado con **Next.js**, utilizando **React** para el frontend y **Axios** para la interacción con la API. La aplicación permite a los usuarios registrarse, iniciar sesión y gestionar productos.
+
+## Requisitos Previos
+
+Para poder ejecutar este proyecto en tu máquina local, necesitarás tener instalados los siguientes programas:
+
+- [Node.js](https://nodejs.org/en/) (v16 o superior)
+- [npm](https://www.npmjs.com/) (v8 o superior) o [yarn](https://yarnpkg.com/)
+
+## Instalación
+
+Sigue los siguientes pasos para instalar y ejecutar el proyecto:
+
+### 1. Clonar el Repositorio
+
+Primero, clona este repositorio a tu máquina local:
+
+```bash
+git clone https://github.com/tu-usuario/gestion-de-productos.git
+
+### 2. Instalar Dependencias
+
+Una vez que hayas clonado el proyecto, navega a la carpeta del proyecto e instala las dependencias necesarias ejecutando:
+
+npm
+cd gestion-de-productos
+cd backend / cd frontend en terminales diferentes
+npm install
+
+yarn
+cd gestion-de-productos
+cd backend / cd frontend en terminales diferentes
+yarn install
+
+### 3. Configurar Variables de Entorno
+
+Este proyecto utiliza variables de entorno para la configuración de la API. Crea un archivo .env.local en la raíz del proyecto y agrega las siguientes variables:
+
+NEXT_PUBLIC_API_URL=http://localhost:PORT/api
+
+NODE_ENV=production || production
+ALLOWED_ORIGINS=https://products-crud-mern-frontend.vercel.app
+PORT=
+MONGO_URI=
+JWT_SECRET=
+
+### 4. Ejecutar el Proyecto
+
+Ahora que has instalado las dependencias y configurado las variables de entorno, puedes ejecutar el proyecto en tu entorno local con el siguiente comando:
+
+si lo haces de forma local usar:
+npm run dev, sino acceder a: 
+https://products-crud-mern-frontend.vercel.app/
+
+
+
+
