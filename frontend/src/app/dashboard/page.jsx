@@ -24,7 +24,6 @@ export default function Page() {
         <main>
             <Navbar />
             <div className="container mt-5">
-                
                 <Dashboard />
             </div>
         </main>
